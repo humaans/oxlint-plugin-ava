@@ -1,0 +1,66 @@
+{
+  "name": "@humaans/oxlint-plugin-ava",
+  "version": "1.0.0",
+  "description": "Oxlint plugin for AVA test framework",
+  "author": "simon@humaans.io",
+  "license": "MIT",
+  "type": "module",
+  "sideEffects": false,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts",
+    "clean": "rm -rf dist",
+    "prepare": "pnpm build",
+    "prepublishOnly": "pnpm lint && pnpm test",
+    "lint": "oxlint",
+    "test": "ava"
+  },
+  "keywords": [
+    "oxlint",
+    "plugin",
+    "ava",
+    "testing",
+    "linter"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/humaans/oxlint-plugin-ava.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "oxlint": "*"
+  },
+  "devDependencies": {
+    "ava": "^6.4.1",
+    "oxfmt": "0.27.0",
+    "oxlint": "^1.42.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.9.3"
+  },
+  "ava": {
+    "extensions": {
+      "ts": "module"
+    },
+    "nodeArguments": [
+      "--experimental-strip-types"
+    ],
+    "files": [
+      "src/**/*.test.ts"
+    ]
+  }
+}
