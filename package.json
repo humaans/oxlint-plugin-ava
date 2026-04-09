@@ -1,6 +1,6 @@
 {
   "name": "@humaans/oxlint-plugin-ava",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Oxlint plugin for AVA test framework",
   "author": "simon@humaans.io",
   "license": "MIT",

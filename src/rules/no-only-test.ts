@@ -21,10 +21,11 @@ export const noOnlyTest: Rule = {
     return {
       CallExpression(node) {
         // Match: test.only(...) or test.serial.only(...) etc.
-        if (isTestModifierCall(node, 'only')) {
+        const onlyNode = findModifierNode(node, 'only')
+        if (onlyNode) {
           context.report({
             message: 'test.only is not allowed in committed code',
-            node,
+            node: onlyNode,
           })
         }
       },
@@ -32,24 +33,26 @@ export const noOnlyTest: Rule = {
   },
 }
 
-function isTestModifierCall(
+function findModifierNode(
   node: ESTree.CallExpression,
   modifier: string,
-): boolean {
+): ESTree.Identifier | null {
   let current: ESTree.Expression | undefined = node.callee
   while (current) {
     if (current.type === 'MemberExpression') {
       const prop = current.property
       if (prop.type === 'Identifier' && prop.name === modifier) {
         // Check if the chain starts with 'test'
-        return hasTestRoot(current.object)
+        if (hasTestRoot(current.object)) {
+          return prop
+        }
       }
       current = current.object
     } else {
       break
     }
   }
-  return false
+  return null
 }
 
 function hasTestRoot(node: ESTree.Expression | undefined): boolean {
