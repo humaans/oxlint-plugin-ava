@@ -79,30 +79,33 @@ var noOnlyTest = {
   create(context) {
     return {
       CallExpression(node) {
-        if (isTestModifierCall(node, "only")) {
+        const onlyNode = findModifierNode(node, "only");
+        if (onlyNode) {
           context.report({
             message: "test.only is not allowed in committed code",
-            node
+            node: onlyNode
           });
         }
       }
     };
   }
 };
-function isTestModifierCall(node, modifier) {
+function findModifierNode(node, modifier) {
   let current = node.callee;
   while (current) {
     if (current.type === "MemberExpression") {
       const prop = current.property;
       if (prop.type === "Identifier" && prop.name === modifier) {
-        return hasTestRoot(current.object);
+        if (hasTestRoot(current.object)) {
+          return prop;
+        }
       }
       current = current.object;
     } else {
       break;
     }
   }
-  return false;
+  return null;
 }
 function hasTestRoot(node) {
   if (!node) return false;
